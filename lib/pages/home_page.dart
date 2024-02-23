@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:week_4/configs/constants.dart';
+import 'package:provider/provider.dart';
+import 'package:week_4/components/todo_widget.dart';
 import 'package:week_4/models/todo.dart';
-import 'package:week_4/pages/todo_page.dart';
+import 'package:week_4/notifiers/todos_notifier.dart';
+import 'package:week_4/utils/methods.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
@@ -12,7 +14,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final List<Todo> todos = <Todo>[
-    Todo(name: "Shopping", description: "Pick up groceries", complete: true),
+    Todo(name: "Shopping", description: "Pick up groceries", completed: true),
     Todo(name: "Paint", description: "Recreate the Mono Lisa"),
     Todo(name: "Dance", description: "I wanna dance with somebody"),
   ];
@@ -23,6 +25,16 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          Consumer<TodosNotifier>(
+              builder: (_, notifier, __) => Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      'Todo: ${notifier.todoRemainingCount.toString()}',
+                      style: const TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+                  ))
+        ],
         backgroundColor: Theme.of(context).primaryColor,
         centerTitle: true,
         title: Text(
@@ -36,78 +48,16 @@ class _HomePageState extends State<HomePage> {
             bottom: size.height * 0.01,
             left: size.width * 0.12,
             right: size.width * 0.12),
-        child: ListView.builder(
-            itemCount: todos.length,
-            itemBuilder: (BuildContext context, int i) {
-              return Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: GestureDetector(
-                  onHorizontalDragEnd: (details) {
-                    setState(() {
-                      todos[i].complete = false;
-                    });
-                  },
-                  child: GestureDetector(
-                    onDoubleTap: () {
-                      setState(() {
-                        todos.remove(todos[i]);
-                      });
-                    },
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          todos[i].complete = true;
-                        });
-                        // Navigator.of(context).push(MaterialPageRoute(
-                        // builder: ((context) => const TodoPage())));
-                      },
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(kBorderRadius),
-                          ),
-                          padding: const EdgeInsets.all(5),
-                          child: Padding(
-                            padding:
-                                const EdgeInsets.only(left: 12.0, right: 12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      todos[i].name,
-                                      style: const TextStyle(
-                                          fontSize: 24,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w700),
-                                    ),
-                                    const SizedBox(
-                                      width: 24,
-                                    ),
-                                    Text(todos[i].description,
-                                        textAlign: TextAlign.left,
-                                        style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                            fontStyle: FontStyle.italic)),
-                                  ],
-                                ),
-                                Icon(
-                                  todos[i].complete
-                                      ? Icons.check_box_outlined
-                                      : Icons.square_outlined,
-                                  size: 28,
-                                )
-                              ],
-                            ),
-                          )),
-                    ),
-                  ),
-                ),
-              );
-            }),
+        child: Consumer<TodosNotifier>(
+          builder: (context, notifier, child) => RefreshIndicator(
+            onRefresh: notifier.refresh,
+            child: ListView.builder(
+                itemCount: notifier.todoCount,
+                itemBuilder: (BuildContext context, int i) {
+                  return TodoWidget(todo: notifier.todos[i]);
+                }),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddTodo,
@@ -117,74 +67,68 @@ class _HomePageState extends State<HomePage> {
   }
 
   _openAddTodo() {
-    final size = MediaQuery.of(context).size;
-    final TextEditingController _title = TextEditingController();
+    final TextEditingController _name = TextEditingController();
     final TextEditingController _description = TextEditingController();
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     // showDialog(context: context, builder: ((context) => Column(children: [],)));
 
     showDialog(
       context: context,
-      builder: (context) => Padding(
-        padding:
-            EdgeInsets.only(top: size.height * 0.3, bottom: size.height * 0.3),
-        child: AlertDialog(
-          content: Center(
-            child: Form(
-              key: _formKey, 
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 12.0),
-                      child: Text(
-                        'Add a Todo',
-                        style: TextStyle(fontSize: 18),
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          AlertDialog(
+            content: Center(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(bottom: 12.0),
+                        child: Text(
+                          'Add Todo',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ),
-                    ),
-                    const Text('Title'),
-                    TextFormField(
-                      controller: _title,
-                      validator: emptyFormValidation,
+                      const Text('Title'),
+                      TextFormField(
+                        controller: _name,
+                        validator: emptyFormValidation,
                       ),
-                    const Padding(
-                      padding: EdgeInsets.only(top: 24.0),
-                      child: Text('Description'),
-                    ),
-                    TextFormField(
-                      controller: _description,
-                      validator: emptyFormValidation,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 24.0),
-                      child: Container(
-                        alignment: Alignment.bottomCenter,
-                        child: TextButton(
-                            onPressed: () {
-                              if(!_formKey.currentState!.validate()) return;
-                              setState(() {
-                                todos.add(Todo(
-                                    name: _title.text,
-                                    description: _description.text));
-                              });
-                              Navigator.pop(context);
-                            },
-                            child: const Text('Submit')),
+                      const Padding(
+                        padding: EdgeInsets.only(top: 24.0),
+                        child: Text('Description'),
                       ),
-                    )
-                  ]),
+                      TextFormField(
+                        controller: _description,
+                        validator: emptyFormValidation,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 24.0),
+                        child: Container(
+                          alignment: Alignment.bottomCenter,
+                          child: TextButton(
+                              onPressed: () async {
+                                if (!_formKey.currentState!.validate()) return;
+                                await Provider.of<TodosNotifier>(context,
+                                        listen: false)
+                                    .addTodo(Todo(
+                                        name: _name.text,
+                                        description: _description.text));
+                                Navigator.pop(context);
+                              },
+                              child: const Text('Submit')),
+                        ),
+                      )
+                    ]),
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
-
-  String? emptyFormValidation(value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a value!';
-                      }
-                      return null;
-                    }
 }
