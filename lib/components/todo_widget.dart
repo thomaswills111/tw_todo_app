@@ -29,7 +29,7 @@ class _TodoWidgetState extends State<TodoWidget> {
                     },
             icon: Icons.delete,
             backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(kBorderRadius),
                 bottomLeft: Radius.circular(kBorderRadius)),

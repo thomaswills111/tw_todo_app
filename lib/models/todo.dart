@@ -27,16 +27,22 @@ class Todo {
   }
 
   factory Todo.fromMap(Map<String, dynamic> mapData) {
-    bool complete = mapData['completed'] is int
-        ? mapData['completed'] == 0
-            ? false
-            : true
+    // bool completed = mapData['completed'] ? true : false; // Dart is not truthy - does not work
+    bool completed = mapData['completed'] is int
+        ? mapData['completed'] != 0
         : mapData['completed'];
+    // bool completed = mapData['completed'] is int
+    //     ? mapData['completed'] == 0
+    //         ? false
+    //         : true
+    //     : mapData['completed'];
     return Todo(
-        id: mapData['_id'],
+        id: (mapData['_id'] == null) ? mapData['id'] : 0,
+        // id: mapData['id'],
+        //id: 0,
         name: mapData['name'],
         description: mapData['description'],
-        completed: complete);
+        completed: completed);
   }
 
   factory Todo.fromJson(Map<String, dynamic> json) {

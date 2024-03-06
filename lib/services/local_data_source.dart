@@ -4,7 +4,7 @@ import 'package:week_4/services/data_source.dart';
 
 class LocalHiveDataSource extends IDataSource {
   final String boxName = 'todos';
-  
+
   LocalHiveDataSource() {
     init();
   }
@@ -18,7 +18,10 @@ class LocalHiveDataSource extends IDataSource {
   @override
   Future<List<Todo>> browse() async {
     List<Todo> todos = [];
-    return todos;
+    var box = Hive.box(boxName);
+
+    return List.generate(
+        box.values.cast().length, (i) => Todo.fromMap(box.get(i)));
   }
 
   @override
@@ -33,12 +36,18 @@ class LocalHiveDataSource extends IDataSource {
 
   @override
   Future<bool> add(Todo todo) async {
-    return true;
+    var box = Hive.box(boxName);
+    try {
+      box.put('todos', todo);
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 
   @override
   Future<bool> delete(Todo todo) async {
     return true;
   }
-
 }

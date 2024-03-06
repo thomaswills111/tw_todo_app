@@ -16,9 +16,9 @@ class SQLDatasource extends IDataSource {
     database = await openDatabase(
       join(await getDatabasesPath(), 'todo_data.db'),
       onCreate: (db, version) {
-        
         return db.execute(
             'CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY AUTO_INCREMENT, name TEXT, description TEXT, completed INTEGER)');
+        //     //'CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY, name TEXT, description TEXT, completed INTEGER)');
       },
       version: 1,
     );
@@ -38,14 +38,21 @@ class SQLDatasource extends IDataSource {
   Future<Todo> read(String id) async {
     final List<Map<String, dynamic>> result;
     await init;
-    result = await database.query(tableName, where: 'id = ?', whereArgs: [id]); // ? is a placeholder substituted with whereArgs
+    result = await database.query(tableName,
+        where: 'id = ?',
+        whereArgs: [id]); // ? is a placeholder substituted with whereArgs
     return Todo.fromMap(result[0]);
   }
 
   @override
   Future<bool> edit(Todo model) async {
     await init;
-    await database.update(tableName, model.toMap(), where: 'id = ?', whereArgs: [model.id]);
+    try {
+      await database.update(tableName, model.toMap(),
+          where: 'id = ?', whereArgs: [model.id]);
+    } catch (e) {
+      return false;
+    }
     return true;
   }
 
