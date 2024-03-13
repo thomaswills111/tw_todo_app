@@ -3,7 +3,7 @@ import 'package:week_4/models/todo.dart';
 import 'package:week_4/services/data_source.dart';
 import 'package:path/path.dart';
 
-class SQLDatasource extends IDataSource {
+class SQLDatasource implements IDataSource {
   late Database database;
   late Future init;
   final String tableName = 'todos';

@@ -1,7 +1,6 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_it/get_it.dart';
 import 'package:week_4/models/todo.dart';
 import 'package:week_4/services/data_source.dart';
 import 'package:week_4/services/sql_data_source.dart';
@@ -27,14 +26,12 @@ class TodosNotifier extends ChangeNotifier {
     IDataSource dataSource = Get.find();
     await dataSource.add(todo);
     refresh();
-    notifyListeners();
   }
 
   removeTodo(Todo todo) async {
     IDataSource dataSource = Get.find();
     await dataSource.delete(todo);
     refresh();
-    notifyListeners();
   }
 
   // Not used currently
@@ -48,10 +45,9 @@ class TodosNotifier extends ChangeNotifier {
     IDataSource dataSource = Get.find();
     await dataSource.edit(todo);
     refresh();
-    notifyListeners();
   }
 
-  Future<void> refresh() async {
+  Future<dynamic> refresh() async {
     IDataSource dataSource = Get.find();
     _todos = await dataSource.browse();
     notifyListeners();

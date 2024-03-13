@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 0)
-class Todo {
+class Todo extends HiveObject{
   @HiveField(0)
-  int id;
+  dynamic id;
   @HiveField(1)
   String name;
   @HiveField(2)
@@ -12,14 +12,14 @@ class Todo {
   bool completed;
 
   Todo(
-      {this.id = 0,
+      {this.id,
       required this.name,
       required this.description,
       this.completed = false});
 
   Map<String, dynamic> toMap() {
     return {
-      // 'id': id,
+      'id': id,
       'name': name,
       'description': description,
       'completed': completed,
@@ -64,10 +64,10 @@ class TodoAdapter extends TypeAdapter<Todo> {
   @override
   Todo read(BinaryReader reader) {
     return Todo(
-      id: reader.read(0),
-      name: reader.read(1),
-      description: reader.read(2),
-      completed: reader.read(3),
+      id: reader.read(),
+      name: reader.read(),
+      description: reader.read(),
+      completed: reader.read(),
     );
   }
 
