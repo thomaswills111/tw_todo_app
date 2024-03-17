@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:week_4/models/todo.dart';
 import 'package:week_4/services/data_source.dart';
@@ -33,23 +34,20 @@ class HiveDataSource implements IDataSource {
 
   @override
   Future<bool> edit(Todo model) async {
+    await init;
+    Box box = Hive.box<Todo>(boxName);
+    Todo todo = box.get(model.key);
+    todo.save();
     return true;
-    // await init;
-    // Box box = await Hive.box(boxName);
-    // Todo todo = box.get(model.id.toString());
-    // todo.completed = model.completed;
-    // box.put(model.id.toString(), todo);
-    // return true;
   }
 
   @override
-  Future<bool> add(Todo model) async {
+  Future<bool> add(Todo todo) async {
     await init;
     Box box = Hive.box<Todo>(boxName);
 
-    // Box box = Hive.box(boxName);
     try {
-      box.add(model);
+      box.add(todo);
       return true;
     } catch (e) {
       print(e);
@@ -59,6 +57,10 @@ class HiveDataSource implements IDataSource {
 
   @override
   Future<bool> delete(Todo todo) async {
+    await init;
+    Box box = Hive.box<Todo>(boxName);
+    print(todo.id);
+    box.delete(todo.key);
     return true;
   }
 }

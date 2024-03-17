@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:week_4/models/todo.dart';
 import 'package:week_4/services/data_source.dart';
-import 'package:week_4/services/sql_data_source.dart';
 
 class TodosNotifier extends ChangeNotifier {
   // final SQLDatasource _datasource = SQLDatasource();
