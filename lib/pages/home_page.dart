@@ -17,11 +17,15 @@ class _HomePageState extends State<HomePage> {
     Todo(name: "Shopping", description: "Pick up groceries", completed: true),
     Todo(name: "Paint", description: "Recreate the Mono Lisa"),
     Todo(name: "Dance", description: "I wanna dance with somebody"),
+
   ];
+
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    // Used to get the future builder to work correctly; future paramater references this
+    Future fetchFuture = Provider.of<TodosNotifier>(context, listen: false).refresh();
 
     return Scaffold(
       appBar: AppBar(
@@ -49,15 +53,33 @@ class _HomePageState extends State<HomePage> {
             left: size.width * 0.12,
             right: size.width * 0.12),
         child: Consumer<TodosNotifier>(
-          builder: (context, notifier, child) => RefreshIndicator(
-            onRefresh: notifier.refresh,
-            child: ListView.builder(
-                itemCount: notifier.todoCount,
-                itemBuilder: (BuildContext context, int i) {
-                  return TodoWidget(todo: notifier.todos[i]);
-                }),
-          ),
-        ),
+            builder: (context, notifier, child) => FutureBuilder<dynamic>(
+                future: fetchFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text('Error retrieving data: ${snapshot.error}');
+                  }
+
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+
+                  }
+
+                  return RefreshIndicator(
+                    onRefresh: notifier.refresh,
+                    child: ListView.builder(
+                        itemCount: notifier.todoCount,
+                        itemBuilder: (BuildContext context, int i) {
+                          Todo todo = notifier.todos[i];
+                          return Dismissible(
+                              key: Key(todo.id.toString()),
+                              onDismissed: (direction) {
+                                notifier.removeTodo(todo);
+                              },
+                              child: TodoWidget(todo: notifier.todos[i]));
+                        }),
+                  );
+                })),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _openAddTodo,

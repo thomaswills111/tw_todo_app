@@ -19,34 +19,20 @@ class _TodoWidgetState extends State<TodoWidget> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
-      child: Slidable(
-        startActionPane: ActionPane(motion: const ScrollMotion(), children: [
-          SlidableAction(
-            autoClose: true,
-            onPressed: (context) {
-                Provider.of<TodosNotifier>(context, listen: false)
-                    .removeTodo(widget.todo);
-                    },
-            icon: Icons.delete,
-            backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-            padding: EdgeInsets.all(20),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(kBorderRadius),
-                bottomLeft: Radius.circular(kBorderRadius)),
+      child: Container(
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(kBorderRadius),
           ),
-        ]),
-        child: Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: BorderRadius.circular(kBorderRadius),
-            ),
-            padding: const EdgeInsets.all(5),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12.0, right: 12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
+          padding: const EdgeInsets.all(5),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6.0),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -56,9 +42,6 @@ class _TodoWidgetState extends State<TodoWidget> {
                             color: Colors.white,
                             fontWeight: FontWeight.w700),
                       ),
-                      const SizedBox(
-                        width: 24,
-                      ),
                       Text(widget.todo.description,
                           textAlign: TextAlign.left,
                           style: const TextStyle(
@@ -67,21 +50,21 @@ class _TodoWidgetState extends State<TodoWidget> {
                               fontStyle: FontStyle.italic)),
                     ],
                   ),
-                  Checkbox(
-                      side: BorderSide(color: appTheme.unselectedWidgetColor),
-                      value: widget.todo.completed,
-                      onChanged: (value) {
-                        // setState(() {
-                        //   widget.todo.completed = value!;
-                        // });
-                        widget.todo.completed = value!;
-                        Provider.of<TodosNotifier>(context, listen: false)
-                            .updateTodo(widget.todo);
-                      })
-                ],
-              ),
-            )),
-      ),
+                ),
+                Checkbox(
+                    side: BorderSide(color: appTheme.unselectedWidgetColor),
+                    value: widget.todo.completed,
+                    onChanged: (value) {
+                      // setState(() {
+                      //   widget.todo.completed = value!;
+                      // });
+                      widget.todo.completed = value!;
+                      Provider.of<TodosNotifier>(context, listen: false)
+                          .updateTodo(widget.todo);
+                    })
+              ],
+            ),
+          )),
     );
   }
 }

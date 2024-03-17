@@ -1,9 +1,9 @@
 import 'package:hive/hive.dart';
 
 @HiveType(typeId: 0)
-class Todo {
+class Todo extends HiveObject{
   @HiveField(0)
-  int id;
+  dynamic id;
   @HiveField(1)
   String name;
   @HiveField(2)
@@ -12,14 +12,14 @@ class Todo {
   bool completed;
 
   Todo(
-      {this.id = 0,
+      {this.id,
       required this.name,
       required this.description,
       this.completed = false});
 
   Map<String, dynamic> toMap() {
     return {
-      // 'id': id,
+      'id': id,
       'name': name,
       'description': description,
       'completed': completed,
@@ -27,16 +27,22 @@ class Todo {
   }
 
   factory Todo.fromMap(Map<String, dynamic> mapData) {
-    bool complete = mapData['completed'] is int
-        ? mapData['completed'] == 0
-            ? false
-            : true
+    // bool completed = mapData['completed'] ? true : false; // Dart is not truthy - does not work
+    bool completed = mapData['completed'] is int
+        ? mapData['completed'] != 0
         : mapData['completed'];
+    // bool completed = mapData['completed'] is int
+    //     ? mapData['completed'] == 0
+    //         ? false
+    //         : true
+    //     : mapData['completed'];
     return Todo(
-        id: mapData['_id'],
+        id: (mapData['_id'] == null) ? mapData['id'] : 0,
+        // id: mapData['id'],
+        //id: 0,
         name: mapData['name'],
         description: mapData['description'],
-        completed: complete);
+        completed: completed);
   }
 
   factory Todo.fromJson(Map<String, dynamic> json) {
@@ -58,10 +64,10 @@ class TodoAdapter extends TypeAdapter<Todo> {
   @override
   Todo read(BinaryReader reader) {
     return Todo(
-      id: reader.read(0),
-      name: reader.read(1),
-      description: reader.read(2),
-      completed: reader.read(3),
+      id: reader.read(),
+      name: reader.read(),
+      description: reader.read(),
+      completed: reader.read(),
     );
   }
 

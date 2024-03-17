@@ -1,13 +1,12 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:get/get.dart';
 import 'package:week_4/models/todo.dart';
 import 'package:week_4/services/data_source.dart';
 import 'package:week_4/services/sql_data_source.dart';
 
 class TodosNotifier extends ChangeNotifier {
-  final SQLDatasource _datasource = SQLDatasource();
+  // final SQLDatasource _datasource = SQLDatasource();
 
   List<Todo> _todos = [];
 
@@ -24,39 +23,33 @@ class TodosNotifier extends ChangeNotifier {
 
   addTodo(Todo todo) async {
     // _todos.add(todo);
-    await _datasource.add(todo);
+    IDataSource dataSource = Get.find();
+    await dataSource.add(todo);
     refresh();
-    notifyListeners();
   }
 
   removeTodo(Todo todo) async {
-    // _todos.remove(todo);
-    await _datasource.delete(todo);
+    IDataSource dataSource = Get.find();
+    await dataSource.delete(todo);
     refresh();
-    notifyListeners();
   }
 
   // Not used currently
   clearTodos() {
+    IDataSource dataSource = Get.find();
     _todos.clear();
     notifyListeners();
   }
 
-  updateTodo(Todo todo) {
-    _datasource.edit(todo);
+  updateTodo(Todo todo) async {
+    IDataSource dataSource = Get.find();
+    await dataSource.edit(todo);
     refresh();
-    notifyListeners();
   }
 
-  // FIX THIS
-  Future<void> refresh() async {
-    if (GetIt.I.isReadySync<IDataSource>()) {
-      _todos = await GetIt.I<IDataSource>().browse();
-      notifyListeners();
-    } else {
-      print('Was not ready');
-      _todos = await GetIt.I<IDataSource>().browse();
-      notifyListeners();
-    }
+  Future<dynamic> refresh() async {
+    IDataSource dataSource = Get.find();
+    _todos = await dataSource.browse();
+    notifyListeners();
   }
 }
