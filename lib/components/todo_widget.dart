@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:week_4/configs/constants.dart';
 import 'package:week_4/configs/themes.dart';
@@ -35,19 +35,28 @@ class _TodoWidgetState extends State<TodoWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.todo.name,
-                        style: const TextStyle(
-                            fontSize: 24,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      Text(widget.todo.description,
-                          textAlign: TextAlign.left,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        child: Text(
+                          widget.todo.name,
                           style: const TextStyle(
-                              fontSize: 16,
+                              // overflow: TextOverflow.fade,
+                              overflow: TextOverflow.ellipsis,
+                              fontSize: 24,
                               color: Colors.white,
-                              fontStyle: FontStyle.italic)),
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.55,
+                        child: Text(widget.todo.description,
+                            textAlign: TextAlign.left,
+                            style: const TextStyle(
+                                overflow: TextOverflow.ellipsis,
+                                fontSize: 16,
+                                color: Colors.white,
+                                fontStyle: FontStyle.italic)),
+                      ),
                     ],
                   ),
                 ),

@@ -45,12 +45,14 @@ class Todo extends HiveObject{
         completed: completed);
   }
 
-  factory Todo.fromJson(Map<String, dynamic> json) {
+  factory Todo.fromJson(Map<dynamic, dynamic> json) {
     return Todo(
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      completed: json['completed'],
+      completed: json['completed'] == 1 
+      ? true 
+      : false,
     );
   }
 

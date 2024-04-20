@@ -88,9 +88,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   _openAddTodo() {
-    final TextEditingController _name = TextEditingController();
-    final TextEditingController _description = TextEditingController();
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final TextEditingController name = TextEditingController();
+    final TextEditingController description = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     // showDialog(context: context, builder: ((context) => Column(children: [],)));
 
     showDialog(
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
           AlertDialog(
             content: Center(
               child: Form(
-                key: _formKey,
+                key: formKey,
                 child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -116,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const Text('Title'),
                       TextFormField(
-                        controller: _name,
+                        controller: name,
                         validator: emptyFormValidation,
                       ),
                       const Padding(
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                         child: Text('Description'),
                       ),
                       TextFormField(
-                        controller: _description,
+                        controller: description,
                         validator: emptyFormValidation,
                       ),
                       Padding(
@@ -133,12 +133,12 @@ class _HomePageState extends State<HomePage> {
                           alignment: Alignment.bottomCenter,
                           child: TextButton(
                               onPressed: () async {
-                                if (!_formKey.currentState!.validate()) return;
+                                if (!formKey.currentState!.validate()) return;
                                 await Provider.of<TodosNotifier>(context,
                                         listen: false)
                                     .addTodo(Todo(
-                                        name: _name.text,
-                                        description: _description.text));
+                                        name: name.text,
+                                        description: description.text));
                                 Navigator.pop(context);
                               },
                               child: const Text('Submit')),

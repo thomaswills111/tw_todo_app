@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:week_4/firebase_options.dart';
@@ -7,18 +8,17 @@ import 'dart:async';
 
 class RemoteApiDatasource extends IDataSource {
   late FirebaseDatabase database;
+  late CollectionReference todosReference;
   late Future initTask;
 
   RemoteApiDatasource() {
     initTask = Future(() async {
-      await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform);
       database = FirebaseDatabase.instance;
     });
   }
 
   @override
-  Future<List<Todo>>browse() async {
+  Future<List<Todo>> browse() async {
     await initTask;
     List<Todo> todos = <Todo>[];
 
@@ -30,7 +30,7 @@ class RemoteApiDatasource extends IDataSource {
     }
 
     Map<String, dynamic>.from(snapshot.value as Map).forEach((key, value) {
-      value['_id'] = key;
+      value['id'] = key;
       todos.add(Todo.fromJson(value));
     });
 
@@ -39,39 +39,34 @@ class RemoteApiDatasource extends IDataSource {
 
   @override
   Future<bool> add(Todo model) async {
-    DatabaseReference ref = database.ref('todos/${model.id}');
+    await database.ref('todos').push().set({
+      // model.toMap()
+      'name': model.name,
+      'description' : model.description,
+      'completed': model.completed,
+  });
+    return true;
 
-    await ref.set({
-      "_id": model.id,
-      "name": model.name,
-      "description": model.description,
-      "completed": model.completed,
-    });
+  }
 
+  @override
+  Future<bool> delete(Todo model) async {
+    await database.ref('todos/${model.id}').remove();
     return true;
   }
 
-  // @override
-  // Future<List<Todo>> browse() {
-  //   // TODO: implement browse
-  //   throw UnimplementedError();
-  // }
-
   @override
-  Future<bool> delete(Todo model) {
-    // TODO: implement delete
-    throw UnimplementedError();
+  Future<bool> edit(Todo model) async {
+    await database
+        .ref('todos/${model.id}')
+        .update({'completed': model.completed});
+    return true;
   }
 
   @override
-  Future<bool> edit(Todo model) {
-    // TODO: implement edit
-    throw UnimplementedError();
-  }
+  Future<Todo> read(String id) async {
+    final snapshot =  await database.ref('todos/$id').get();
+    return Todo.fromJson(snapshot.value as Map);
 
-  @override
-  Future<Todo> read(String id) {
-    // TODO: implement read
-    throw UnimplementedError();
   }
 }

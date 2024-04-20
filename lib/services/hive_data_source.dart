@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:week_4/models/todo.dart';
 import 'package:week_4/services/data_source.dart';

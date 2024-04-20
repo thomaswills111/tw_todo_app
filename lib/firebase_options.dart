@@ -25,7 +25,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -44,37 +47,33 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAgSuE8H5UrSq8u_FdylC0UOWBT7JvVnUo',
-    appId: '1:705292924564:web:e1ec7ec3e3d5e24500e681',
-    messagingSenderId: '705292924564',
-    projectId: 'tw-todo-app',
-    authDomain: 'tw-todo-app.firebaseapp.com',
-    storageBucket: 'tw-todo-app.appspot.com',
+    apiKey: 'AIzaSyBF3YQaDMoC6hTCMvfALGBgiFpDWYIsvu4',
+    appId: '1:799225757524:web:ec48cf74ad30e118f4d2c1',
+    messagingSenderId: '799225757524',
+    projectId: 'adv-mob-todo',
+    authDomain: 'adv-mob-todo.firebaseapp.com',
+    databaseURL: 'https://adv-mob-todo-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'adv-mob-todo.appspot.com',
+    measurementId: 'G-N8J9YFQ908',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBVVfHLRpVSXqSq61rR_WnNuCyHseVGNM4',
-    appId: '1:705292924564:android:ce09d5caf99d292f00e681',
-    messagingSenderId: '705292924564',
-    projectId: 'tw-todo-app',
-    storageBucket: 'tw-todo-app.appspot.com',
+    apiKey: 'AIzaSyCIATWtPi8HpBxfQ88n656nzsiC4uFbWKg',
+    appId: '1:799225757524:android:393917dfc8fb2520f4d2c1',
+    messagingSenderId: '799225757524',
+    projectId: 'adv-mob-todo',
+    databaseURL: 'https://adv-mob-todo-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'adv-mob-todo.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDH3tIoiQoicdcwFNVFTn3i9_Sep9IE2rk',
-    appId: '1:705292924564:ios:86471474398fddb100e681',
-    messagingSenderId: '705292924564',
-    projectId: 'tw-todo-app',
-    storageBucket: 'tw-todo-app.appspot.com',
-    iosBundleId: 'com.example.week4',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDH3tIoiQoicdcwFNVFTn3i9_Sep9IE2rk',
-    appId: '1:705292924564:ios:d31dc0c731091cb800e681',
-    messagingSenderId: '705292924564',
-    projectId: 'tw-todo-app',
-    storageBucket: 'tw-todo-app.appspot.com',
-    iosBundleId: 'com.example.week4.RunnerTests',
+    apiKey: 'AIzaSyDK7H9zyKIO3WSRrxxoRGvgKX9l4Nu9aFg',
+    appId: '1:799225757524:ios:e4b9d0081076c89ff4d2c1',
+    messagingSenderId: '799225757524',
+    projectId: 'adv-mob-todo',
+    databaseURL: 'https://adv-mob-todo-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'adv-mob-todo.appspot.com',
+    iosClientId: '799225757524-pr1ds9lhbal03ic9jpgepbg2uev4q8ph.apps.googleusercontent.com',
+    iosBundleId: 'com.example.todoList',
   );
 }
