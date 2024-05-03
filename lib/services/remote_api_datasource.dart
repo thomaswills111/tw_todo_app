@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:week_4/firebase_options.dart';
 import 'package:week_4/models/todo.dart';
 import 'package:week_4/services/data_source.dart';
 import 'dart:async';
@@ -40,13 +38,12 @@ class RemoteApiDatasource extends IDataSource {
   @override
   Future<bool> add(Todo model) async {
     await database.ref('todos').push().set({
-      // model.toMap()
+      'id': '',
       'name': model.name,
       'description' : model.description,
-      'completed': model.completed,
+      'completed': model.completed, 
   });
     return true;
-
   }
 
   @override
@@ -58,8 +55,9 @@ class RemoteApiDatasource extends IDataSource {
   @override
   Future<bool> edit(Todo model) async {
     await database
-        .ref('todos/${model.id}')
-        .update({'completed': model.completed});
+        .ref('todos')
+        .child(model.id)
+        .set(model.toMap());
     return true;
   }
 

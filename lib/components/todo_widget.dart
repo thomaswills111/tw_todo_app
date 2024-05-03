@@ -36,7 +36,7 @@ class _TodoWidgetState extends State<TodoWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.55,
+                        width: MediaQuery.of(context).size.width * 0.5,
                         child: Text(
                           widget.todo.name,
                           style: const TextStyle(
@@ -48,7 +48,7 @@ class _TodoWidgetState extends State<TodoWidget> {
                         ),
                       ),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.55,
+                        width: MediaQuery.of(context).size.width * 0.5,
                         child: Text(widget.todo.description,
                             textAlign: TextAlign.left,
                             style: const TextStyle(
@@ -64,9 +64,6 @@ class _TodoWidgetState extends State<TodoWidget> {
                     side: BorderSide(color: appTheme.unselectedWidgetColor),
                     value: widget.todo.completed,
                     onChanged: (value) {
-                      // setState(() {
-                      //   widget.todo.completed = value!;
-                      // });
                       widget.todo.completed = value!;
                       Provider.of<TodosNotifier>(context, listen: false)
                           .updateTodo(widget.todo);

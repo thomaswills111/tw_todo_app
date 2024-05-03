@@ -24,7 +24,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    // Used to get the future builder to work correctly; future paramater references this
     Future fetchFuture = Provider.of<TodosNotifier>(context, listen: false).refresh();
 
     return Scaffold(
@@ -91,7 +90,6 @@ class _HomePageState extends State<HomePage> {
     final TextEditingController name = TextEditingController();
     final TextEditingController description = TextEditingController();
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-    // showDialog(context: context, builder: ((context) => Column(children: [],)));
 
     showDialog(
       context: context,

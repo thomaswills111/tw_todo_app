@@ -18,11 +18,9 @@ class SQLDatasource implements IDataSource {
       onCreate: (db, version) {
         return db.execute(
             'CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY AUTO_INCREMENT, name TEXT, description TEXT, completed INTEGER)');
-        //     //'CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY, name TEXT, description TEXT, completed INTEGER)');
       },
       version: 1,
     );
-    // initalised = true;
   }
 
   @override
@@ -40,7 +38,7 @@ class SQLDatasource implements IDataSource {
     await init;
     result = await database.query(tableName,
         where: 'id = ?',
-        whereArgs: [id]); // ? is a placeholder substituted with whereArgs
+        whereArgs: [id]); // ? is substituted with whereArgs
     return Todo.fromMap(result[0]);
   }
 
@@ -59,9 +57,7 @@ class SQLDatasource implements IDataSource {
   @override
   Future<bool> add(Todo model) async {
     await init;
-    // todo.toMap().remove('id');
     try {
-      // await database.insert(tableName, model.toMap().remove('id'));
       await database.insert(tableName, model.toMap());
       return true;
     } catch (e) {

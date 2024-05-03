@@ -10,7 +10,6 @@ import 'package:week_4/services/remote_api_datasource.dart';
 import 'package:get/get.dart';
 
 void main() async {
-  // For Get (not Get it)
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   Get.put<IDataSource>(RemoteApiDatasource());

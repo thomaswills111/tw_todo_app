@@ -5,7 +5,6 @@ import 'package:week_4/services/data_source.dart';
 class HiveDataSource implements IDataSource {
   late final Future init;
   final String boxName = 'todos';
-  // final Box box;
 
   HiveDataSource() {
     init = initialise();
@@ -14,7 +13,6 @@ class HiveDataSource implements IDataSource {
   Future<void> initialise() async {
     await Hive.initFlutter();
     Hive.registerAdapter(TodoAdapter());
-    // Hive.deleteBoxFromDisk(boxName);
     await Hive.openBox<Todo>(boxName);
   }
 

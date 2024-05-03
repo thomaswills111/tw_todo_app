@@ -31,15 +31,8 @@ class Todo extends HiveObject{
     bool completed = mapData['completed'] is int
         ? mapData['completed'] != 0
         : mapData['completed'];
-    // bool completed = mapData['completed'] is int
-    //     ? mapData['completed'] == 0
-    //         ? false
-    //         : true
-    //     : mapData['completed'];
     return Todo(
         id: (mapData['_id'] == null) ? mapData['id'] : 0,
-        // id: mapData['id'],
-        //id: 0,
         name: mapData['name'],
         description: mapData['description'],
         completed: completed);
@@ -50,9 +43,9 @@ class Todo extends HiveObject{
       id: json['id'],
       name: json['name'],
       description: json['description'],
-      completed: json['completed'] == 1 
-      ? true 
-      : false,
+      completed: json['completed'] is int 
+      ? json['completed'] != 0
+      : json['completed']
     );
   }
 
